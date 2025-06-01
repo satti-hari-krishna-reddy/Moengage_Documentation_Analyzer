@@ -48,14 +48,21 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. **Set the Gemini API Key:**
+4. Make sure these packages are installed on your system before running the app (especially needed for headless browser functionality). If any of them are already installed, you can ignore them:
+
+```bash
+sudo apt-get install libwoff1 libevent-2.1-7t64 libgstreamer-plugins-bad1.0-0 libharfbuzz-icu0 libenchant-2-2 libhyphen0 libmanette-0.2-0
+```
+
+
+5. **Set the Gemini API Key:**
    Gemini Api key as an env variable:
 
 ```
 export GEMINI_API_KEY=your_api_key_here
 ```
 
-5. **Run Agent 1 (Analyzer):**
+6. **Run Agent 1 (Analyzer):**
 
 ```bash
 python main.py
@@ -63,7 +70,7 @@ python main.py
 
 This will generate `analysis_report.json` and `scraped_text.txt`.
 
-6. **Run Agent 2 (Revision - Optional Bonus Task):**
+7. **Run Agent 2 (Revision - Optional Bonus Task):**
 
 ```bash
 python agent-2.py
@@ -79,28 +86,6 @@ This will generate a `revised_document.txt` using suggestions from Agent 1.
 * Due to bot protection on MoEngage’s site, I could not rely on standard `requests`/`BeautifulSoup`. I used **Playwright** to simulate real user behavior and render the full page.
 * I assume the user manually provides URLs that are accessible and are documentation pages.
 * Only English content was considered.
-
----
-
-## Architecture
-
-```
-documentation-analyzer/
-├── agent-2.py               # Agent 2 - Revision Agent
-├── main.py                  # Entry point to run Agent 1
-├── analysis_report.json     # Output of Agent 1
-├── revised_document.txt     # Output of Agent 2
-├── analyzer/
-│   ├── analysis_runner.py   # Orchestrates all analyzers
-│   ├── readability_analyzer.py
-│   ├── structure_analyzer.py
-│   ├── completeness_analyzer.py
-│   ├── style_analyzer.py
-│   ├── prompts.py           # Prompt templates for LLM (minimal usage)
-├── utils/
-│   └── scraping.py          # Uses Playwright to extract full page content
-└── requirements.txt
-```
 
 ---
 
@@ -173,6 +158,28 @@ The changes are applied in-place, and the updated content is saved to `revised_d
 * **Balancing LLM Usage:**
 
   * Full LLM-based rewrites were too expensive and unpredictable. So I designed a system where LLMs are the last resort (for the Revision Agent).
+
+---
+
+## Architecture
+
+```
+documentation-analyzer/
+├── agent-2.py               # Agent 2 - Revision Agent
+├── main.py                  # Entry point to run Agent 1
+├── analysis_report.json     # Output of Agent 1
+├── revised_document.txt     # Output of Agent 2
+├── analyzer/
+│   ├── analysis_runner.py   # Orchestrates all analyzers
+│   ├── readability_analyzer.py
+│   ├── structure_analyzer.py
+│   ├── completeness_analyzer.py
+│   ├── style_analyzer.py
+│   ├── prompts.py           # Prompt templates for LLM (minimal usage)
+├── utils/
+│   └── scraping.py          # Uses Playwright to extract full page content
+└── requirements.txt
+```
 
 ---
 
