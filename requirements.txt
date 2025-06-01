@@ -6,3 +6,4 @@ playwright
 google-generativeai
 textstat
 rich
+setuptools>=65.0
