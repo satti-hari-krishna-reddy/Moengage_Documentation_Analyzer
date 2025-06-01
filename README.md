@@ -19,7 +19,7 @@
 
 This project was built as part of MoEngage's Tech Internship Assessment. The objective was to build one or more AI-powered agents that can analyze and revise public documentation articles from [help.moengage.com](https://help.moengage.com/hc/en-us/articles/...).
 
-We developed:
+I developed:
 
 * **Agent 1:** A documentation analysis agent that generates a structured list of actionable improvements.
 * **Agent 2:** A revision agent that attempts to apply those suggestions automatically.
@@ -61,7 +61,7 @@ export GEMINI_API_KEY=your_api_key_here
 python main.py
 ```
 
-This will generate `analysis_report.json`.
+This will generate `analysis_report.json` and `scraped_text.txt`.
 
 6. **Run Agent 2 (Revision - Optional Bonus Task):**
 
@@ -75,10 +75,9 @@ This will generate a `revised_document.txt` using suggestions from Agent 1.
 
 ## Assumptions
 
-* We assume the target audience is marketers with limited technical background.
-* Due to bot protection on MoEngage’s site, we could not rely on standard `requests`/`BeautifulSoup`. We used **Playwright** to simulate real user behavior and render the full page.
-* We assume the user manually provides URLs that are accessible and are documentation pages.
-* Locale-specific content was treated equally (we didn't do advanced i18n-level checks).
+* I assume the target audience is marketers with limited technical background.
+* Due to bot protection on MoEngage’s site, I could not rely on standard `requests`/`BeautifulSoup`. I used **Playwright** to simulate real user behavior and render the full page.
+* I assume the user manually provides URLs that are accessible and are documentation pages.
 * Only English content was considered.
 
 ---
@@ -114,7 +113,7 @@ The `main.py` file runs the analysis pipeline orchestrated by `analysis_runner.p
 * **Readability:**
 
   * Uses `textstat` to calculate metrics like Flesch Reading Ease.
-  * Also uses heuristic checks for passive voice, jargon density, and sentence length.
+  * Uses assess the content's readability from the perspective of a non-technical marketer.
 
 * **Structure & Flow:**
 
@@ -128,7 +127,7 @@ The `main.py` file runs the analysis pipeline orchestrated by `analysis_runner.p
 
 * **Style Guidelines:**
 
-  * Instead of a full Microsoft Style Guide, we focused on 3 core aspects:
+  * Instead of a full Microsoft Style Guide, I focused on 3 core aspects:
 
     * Voice and Tone
     * Clarity and Conciseness
@@ -136,7 +135,7 @@ The `main.py` file runs the analysis pipeline orchestrated by `analysis_runner.p
 
 ### Agent 2 - Revision Agent
 
-This was the bonus task and we approached it as a hybrid system with layered logic:
+This was the bonus task and I approached it as a hybrid system with layered logic:
 
 1. **String-based Matching:**
 
@@ -144,11 +143,11 @@ This was the bonus task and we approached it as a hybrid system with layered log
 
 2. **Fuzzy Matching (Fallback):**
 
-   * If an exact match fails, we fall back to `fuzzywuzzy`-based approximate matching to locate the closest match.
+   * If an exact match fails, I fall back to `fuzzywuzzy`-based approximate matching to locate the closest match.
 
 3. **LLM Fallback (Final Layer):**
 
-   * If fuzzy matching also fails (or yields low confidence), only then we use Gemini AI to rewrite or rephrase based on the suggestion.
+   * If fuzzy matching also fails (or yields low confidence), only then I use Gemini AI to rewrite or rephrase based on the suggestion.
 
 This tiered fallback approach minimized LLM usage and made the revision process:
 
@@ -173,7 +172,7 @@ The changes are applied in-place, and the updated content is saved to `revised_d
 
 * **Balancing LLM Usage:**
 
-  * Full LLM-based rewrites were too expensive and unpredictable. So I designed a system where LLMs are the last resort.
+  * Full LLM-based rewrites were too expensive and unpredictable. So I designed a system where LLMs are the last resort (for the Revision Agent).
 
 ---
 
@@ -193,7 +192,7 @@ Article 1
 
 ```json
 {
-  "url_analyzed": "https://example.com/localize-campaign-messages",
+  "url_analyzed": "https://help.moengage.com/hc/en-us/articles/115003667986-Localize-Campaign-Messages#h_01JSDJJD6SQVJVKF63DTS5EZX3",
   "readability_analysis": {
     "score": 7.2,
     "assessment": "The document is moderately readable but suffers from excessive redundancy and occasional verbosity. Sentence structures are mostly clear but can be tightened.",
@@ -245,7 +244,7 @@ Article 2
 
 ```json
 {
-  "url_analyzed": "https://www.moengage.com/personalize-demo-guide",
+  "url_analyzed": "https://help.moengage.com/hc/en-us/articles/33132363356564-View-Personalize-in-action#h_01JFAX3T5TMAWM1NZ1JTT4NP88",
   "readability": {
     "score": "35.072287365813395",
     "assessment": "The content is informative but could benefit from improved clarity and consistency.",
