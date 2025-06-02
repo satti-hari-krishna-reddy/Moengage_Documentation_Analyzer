@@ -22,20 +22,12 @@ class ContentFetcher:
                 locale='en-US',
             )
 
-            # Make sure we store cookies to look real
             page = context.new_page()
 
             try:
-                # Intercept requests to block unnecessary stuff (ads, trackers)
                 page.route("**/*", lambda route, request: route.continue_() if request.resource_type in ['document', 'script', 'xhr'] else route.abort())
-
-                # Go to page and wait for actual human-visible content
                 page.goto(self.url, timeout=60000, wait_until="networkidle")
-
-                # Try waiting for visible content inside .main-wrapper
-                page.wait_for_selector(".article", timeout=20000) 
-
-                # Scroll in case there's lazy-loaded stuff
+                page.wait_for_selector(".article", timeout=20000)
                 page.mouse.wheel(0, 3000)
                 page.wait_for_timeout(1500)
 
@@ -54,11 +46,10 @@ class ContentFetcher:
 
         soup = BeautifulSoup(self.html, 'html.parser')
 
-        # Try to find the main content container
         main_wrapper = soup.select_one('.article') or soup.body  
 
         structure = []
-        for tag in main_wrapper.select('h1, h2, h3, h4, h5, h6, p, ul, ol'):
+        for tag in main_wrapper.select('h1, h2, h3, h4, h5, h6, p, ul, ol, table'):
             if tag.name.startswith('h'):
                 structure.append(f"[{tag.name.upper()}] {tag.get_text(strip=True)}")
             elif tag.name in ['ul', 'ol']:
@@ -66,9 +57,19 @@ class ContentFetcher:
                     structure.append(f"- {li.get_text(strip=True)}")
             elif tag.name == 'p':
                 structure.append(tag.get_text(strip=True))
+            elif tag.name == 'table':
+                rows = tag.find_all('tr')
+                table_lines = []
+                for i, row in enumerate(rows):
+                    cols = [col.get_text(strip=True) for col in row.find_all(['td', 'th'])]
+                    line = " | ".join(cols)
+                    table_lines.append(line)
+                    # Add markdown-like separator after header row
+                    if i == 0 and len(cols) > 1:
+                        table_lines.append(" | ".join(['---'] * len(cols)))
+                structure.append("\n".join(table_lines))
 
         return '\n'.join(structure)
-
 
     @classmethod
     def get_content(cls, url):
