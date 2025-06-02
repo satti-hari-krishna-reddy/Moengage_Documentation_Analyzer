@@ -124,8 +124,10 @@ This is especially useful if you want to:
 * Understand agent decisions with better clarity
 * Demonstrate functionality in a user-friendly way
 
-
 Use the UI only if you prefer a visual experience. Otherwise, the backend scripts provide complete functionality for analysis and revision.
+![moengagefrontend](https://github.com/user-attachments/assets/fee972d6-5440-47dc-a863-19118cbc2544)
+
+![moengagefrontend2](https://github.com/user-attachments/assets/d00ffca3-dd82-45d1-bd6a-e78cc3733dc3)
 
 5. **Code to the Frontend:**
 
