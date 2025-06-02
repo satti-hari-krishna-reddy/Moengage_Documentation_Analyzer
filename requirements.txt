@@ -7,3 +7,5 @@ google-generativeai
 textstat
 rich
 setuptools>=65.0
+lxml
+lxml_html_clean
