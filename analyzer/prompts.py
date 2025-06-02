@@ -1,31 +1,51 @@
 READABILITY_PROMPT = """
 Analyze the following document text for readability, especially for a non-technical marketer.
 
-The document includes markers like [H1], [H2], and "-" to indicate structure. DO NOT suggest changing these markers — they are intentional.
+The document includes markers like [H1], [H2], and "-" to indicate structure. DO NOT suggest changing or flagging these markers — they are intentional and part of the formatting.
 
-Due to scraping, the text may have occasional formatting issues such as missing spaces, stray tags, or awkward breaks. **DO NOT flag or comment on these formatting issues.** Only focus on substantive readability problems like:
+Important context: This text may have minor formatting issues due to scraping (e.g., extra/missing spaces, occasional awkward breaks, or stray tags). You MUST IGNORE these and focus only on substantive readability issues. DO NOT flag these formatting artifacts.
 
-- Long, complex, or technical sentences that a general reader may not follow.
-- Sentences with unnecessary jargon, ambiguity, or awkward phrasing.
-- Sentences that could be made more direct or reader-friendly.
+Focus only on issues that significantly affect readability, such as:
+- Long or overly complex sentences that could confuse a general reader.
+- Technical jargon or unclear language that could be simplified.
+- Sentences that could be rewritten to be more direct, clear, or reader-friendly.
 
-You MUST return output as a list of JSON objects — ONE per readability issue.
-Each must follow this format exactly:
+Now, here is the REQUIRED format for your output. You MUST return a single JSON object with exactly two keys:
 
-{
-  "description": "<what is hard to read and why>",
-  "original": "<copy-paste exact sentence from input>",
-  "suggestion": "<a clearer, friendlier version>"
-}
+1. **"assessment"** — A short paragraph summarizing the overall readability quality of the input text.
+2. **"suggestions"** — An array of suggestion objects, where each object includes:
+   - "description": Brief explanation of the readability problem.
+   - "original": The exact sentence or phrase from the text.
+   - "suggestion": A clearer or simpler version of the original.
 
-**DO NOT invent problems or flood the output with low-priority or nitpicky suggestions.**
-Only include real readability issues with meaningful impact.
+Your output MUST follow this JSON format strictly:
 
-Focus on quality, not quantity.
+{{
+  "assessment": "<your assessment here>",
+  "suggestions": [
+    {{
+      "description": "<brief explanation>",
+      "original": "<original sentence>",
+      "suggestion": "<your rewritten version>"
+    }},
+    ...
+  ]
+}}
+
+Instructions:
+
+DO NOT return anything outside of the JSON structure.
+
+DO NOT invent issues or overwhelm with low-impact suggestions.
+
+Only include meaningful, high-impact readability improvements.
+
+Prioritize clarity and quality over quantity.
 
 Here is the Document Text:
 {document_text}
 """
+
 
 STRUCTURE_FLOW_PROMPT = """
 Analyze the structure and flow of the following document.
@@ -41,13 +61,8 @@ Due to scraping, ignore any weird spacing or broken lines — focus ONLY on stru
 
 Return output as a JSON object in this format:
 
-{
   "assessment": "<summary of how well the structure supports comprehension>",
-  "suggestions": [
-    "<actionable structural suggestion 1>",
-    "<actionable structural suggestion 2>"
-  ]
-}
+  "suggestions": "<actionable structural suggestion 1>, <actionable structural suggestion 2> ..."
 
 **DO NOT include filler text or make unnecessary suggestions.**
 Only include impactful suggestions that improve navigation, flow, or clarity.
@@ -69,20 +84,14 @@ IGNORE minor formatting issues from scraping — only assess the depth and clari
 
 Return output as a JSON object in this format:
 
-{
   "assessment": "<does the content feel complete and actionable?>",
-  "suggestions": [
-    "<where an example or detail could be added>",
-    "<which concept needs clearer explanation>"
-  ]
-}
+  "suggestions": "A list of specific, actionable suggestions for improvement."
 
 Do NOT make suggestions just to fill space. Be critical, but only when something is truly missing or unclear.
 
 Here is the Document Text:
 {document_text}
 """
-
 
 STYLE_GUIDELINES_PROMPT = """
 Evaluate this document's writing style based on simplified guidance from professional style guides like Microsoft's.
@@ -96,16 +105,8 @@ Only consider REAL language issues — NOT formatting. Ignore extra tags, line b
 
 Return output as a JSON object:
 
-{
   "assessment": "<summary of how well the tone and style match a helpful user guide>",
-  "suggestions": [
-    {
-      "description": "<what style issue you saw>",
-      "original": "<original sentence>",
-      "suggestion": "<a simpler, clearer rewrite>"
-    }
-  ]
-}
+  "suggestions": "A list of specific, actionable suggestions for improvement."
 
 Make only valuable suggestions. DO NOT flood output with marginal or stylistic nitpicks.
 Quality > Quantity.
