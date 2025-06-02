@@ -120,7 +120,7 @@ The `main.py` file runs the analysis pipeline orchestrated by `analysis_runner.p
 
 ### Agent 2 - Revision Agent
 
-This was the bonus task and I approached it as a hybrid system with layered logic:
+This was the bonus task and I approached it as a hybrid system with layered logic; however, within the current scope, I’m specifically focusing on addressing readability suggestions only:
 
 1. **String-based Matching:**
 
