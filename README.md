@@ -48,6 +48,10 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+```bash
+playwright install chromium
+```
+
 4. **Install required system packages** (for headless browser functionality):
    If any of these packages are already installed, you can safely ignore them.
 
@@ -64,7 +68,7 @@ export GEMINI_API_KEY=your_api_key_here
 6. **Run Agent 1 (Analyzer):**
 
 ```bash
-python main.py  # or just: python main.py
+python3 main.py  # or just: python main.py
 ```
 
 This will generate `analysis_report.json` and `scraped_text.txt`.
@@ -72,7 +76,7 @@ This will generate `analysis_report.json` and `scraped_text.txt`.
 7. **Run Agent 2 (Revision - Optional Bonus Task):**
 
 ```bash
-python agent-2.py # or just: python agent-2.py
+python3 agent-2.py # or just: python agent-2.py
 ```
 
 This will generate a `revised_document.txt` using suggestions from Agent 1.
@@ -105,7 +109,7 @@ python3 main.py  # or just: python main.py
 Make sure Docker is installed, then run:
 
 ```bash
-docker run -p 5173:5173 sattihari/moengage-frontend:latest
+docker run -d -p 5173:80 sattihari/moengage-frontend:latest
 ```
 
 4. **Access the UI:**
