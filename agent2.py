@@ -195,16 +195,9 @@ def apply_readability_patches(text: str, suggestions: list[dict], api_key: str) 
 
     return text
 
-
-def main():
+def revise_text(scraped_text: str, analysis_data: dict) -> str:
     api_key = get_env_api_key()
 
-    scraped_path = "scraped_text.txt"
-    json_path = "analysis_report.json"
-
-    scraped_text = load_text_file(scraped_path)
-
-    analysis_data = load_json_file(json_path)
     # We expect analysis_data to be a dict, containing a "readability" key with "suggestions"
     suggestions = []
     if "readability" in analysis_data and isinstance(analysis_data["readability"].get("suggestions"), list):
@@ -223,26 +216,11 @@ def main():
                 logger.warning("Skipping malformed suggestion entry in analysis_report.json")
 
     if not suggestions:
-        logger.error("No valid readability suggestions found in analysis_report.json. Aborting.")
-        sys.exit(1)
+        raise ValueError("No valid readability suggestions found in analysis data.")
 
     try:
         revised_text = apply_readability_patches(scraped_text, suggestions, api_key)
+        return revised_text
     except Exception as e:
-        logger.error(f"Unexpected error during patching: {e}")
-        # If something truly unexpected happens, fall back to original scraped text
-        revised_text = scraped_text
-
-    output_path = os.path.join(os.getcwd(), "revised_document.txt")
-    try:
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(revised_text)
-        print(f"Patching complete. See '{output_path}'.")
-    except Exception as e:
-        logger.error(f"Failed to write revised_document.txt: {e}")
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
-
+        logger.error(f"Error during patching: {e}")
+        return scraped_text
