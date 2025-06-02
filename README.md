@@ -48,24 +48,23 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Make sure these packages are installed on your system before running the app (especially needed for headless browser functionality). If any of them are already installed, you can ignore them:
+4. **Install required system packages** (for headless browser functionality):
+   If any of these packages are already installed, you can safely ignore them.
 
 ```bash
 sudo apt-get install libwoff1 libevent-2.1-7t64 libgstreamer-plugins-bad1.0-0 libharfbuzz-icu0 libenchant-2-2 libhyphen0 libmanette-0.2-0
 ```
 
-
 5. **Set the Gemini API Key:**
-   Gemini Api key as an env variable:
 
-```
+```bash
 export GEMINI_API_KEY=your_api_key_here
 ```
 
 6. **Run Agent 1 (Analyzer):**
 
 ```bash
-python main.py
+python main.py  # or just: python main.py
 ```
 
 This will generate `analysis_report.json` and `scraped_text.txt`.
@@ -73,10 +72,66 @@ This will generate `analysis_report.json` and `scraped_text.txt`.
 7. **Run Agent 2 (Revision - Optional Bonus Task):**
 
 ```bash
-python agent-2.py
+python agent-2.py # or just: python agent-2.py
 ```
 
 This will generate a `revised_document.txt` using suggestions from Agent 1.
+
+---
+
+## Optional (Frontend UI for Better Testing - Not Part of Evaluation)
+
+While the assignment focuses strictly on backend/agent logic and doesn't require UI, you can optionally test your project through a minimal frontend interface. This makes it easier for evaluators or users to interactively view and compare document changes.
+
+> ⚠️ This is not part of the core evaluation. It's just added to make the testing experience smoother.
+
+### To run the frontend:
+
+1. **Switch to the `flask-server` branch** (where a backend server is preconfigured):
+
+```bash
+git checkout flask-server
+```
+
+2. **Start the backend server:**
+   Make sure you’ve already set your Gemini API key (see Step 5 above), then run:
+
+```bash
+python3 main.py  # or just: python main.py
+```
+
+3. **Run the frontend (Docker):**
+
+Make sure Docker is installed, then run:
+
+```bash
+docker run -p 5173:5173 sattihari/moengage-frontend:latest
+```
+
+4. **Access the UI:**
+
+Open your browser and go to:
+
+```
+http://localhost:5173
+```
+
+From there, you can visually explore document suggestions using the canvas interface.
+
+This is especially useful if you want to:
+
+* Interactively view suggestions per section
+* Understand agent decisions with better clarity
+* Demonstrate functionality in a user-friendly way
+
+
+Use the UI only if you prefer a visual experience. Otherwise, the backend scripts provide complete functionality for analysis and revision.
+
+5. **Code to the Frontend:**
+
+```
+https://github.com/satti-hari-krishna-reddy/MoEngage_Doc_Frontend
+```
 
 ---
 
@@ -120,7 +175,7 @@ The `main.py` file runs the analysis pipeline orchestrated by `analysis_runner.p
 
 ### Agent 2 - Revision Agent
 
-This was the bonus task and I approached it as a hybrid system with layered logic; however, within the current scope, I’m specifically focusing on addressing readability suggestions only:
+This was the bonus task and I approached it as a hybrid system with layered logic:
 
 1. **String-based Matching:**
 
