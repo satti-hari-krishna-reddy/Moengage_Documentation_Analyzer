@@ -67,8 +67,8 @@ def analyze_readability(document_text: str) -> dict:
 
                     # NEW: If the LLM returned a list instead of a dict, handle accordingly
                     if isinstance(llm_data, list):
-                        analysis_result["assessment"] = (
-                            "LLM returned suggestions without a top-level object."
+                        analysis_result["assessment"] = llm_data.get(
+                            "assessment", "LLM returned suggestions without a top-level object."
                         )
                         analysis_result["suggestions"] = llm_data
                     elif isinstance(llm_data, dict):
