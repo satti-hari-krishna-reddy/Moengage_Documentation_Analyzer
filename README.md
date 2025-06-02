@@ -127,6 +127,12 @@ This is especially useful if you want to:
 
 Use the UI only if you prefer a visual experience. Otherwise, the backend scripts provide complete functionality for analysis and revision.
 
+5. **Code to the Frontend:**
+
+```
+https://github.com/satti-hari-krishna-reddy/MoEngage_Doc_Frontend
+```
+
 ---
 
 ## Assumptions
