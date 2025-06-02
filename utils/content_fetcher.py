@@ -26,13 +26,11 @@ class ContentFetcher:
             page = context.new_page()
 
             try:
-                # Intercept requests to block unnecessary stuff (ads, trackers)
                 page.route("**/*", lambda route, request: route.continue_() if request.resource_type in ['document', 'script', 'xhr'] else route.abort())
 
                 # Go to page and wait for actual human-visible content
                 page.goto(self.url, timeout=60000, wait_until="networkidle")
 
-                # Try waiting for visible content inside .main-wrapper
                 page.wait_for_selector(".article", timeout=20000) 
 
                 # Scroll in case there's lazy-loaded stuff
